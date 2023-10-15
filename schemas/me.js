@@ -20,7 +20,14 @@ const meSchema = new Schema ({
     },
     linkedIn: String,
     aboutMe : String,
-    skills : [String],
+    skills : [
+        {
+            skill: String,
+            cat:String
+        }
+    ],
+},{
+    collection: 'Me'
 });
 
-module.exports = mongoose.model("Me", meSchema);
+module.exports = meSchema;

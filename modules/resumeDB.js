@@ -1,26 +1,35 @@
 const mongoose = require("mongoose");
 
-const Me = require("./schemas/me");
-const Projects = require("./schemas/projects");
-const Experience = require("./schemas/experience");
+const Me = require("../schemas/me.js");
+const Projects = require("../schemas/projects.js");
+const Experience = require("../schemas/experience.js");
+const Certification = require("../schemas/certification.js");
+const Education = require("../schemas/education.js");
+
 
 module.exports = class ResumeDB{
-    constructor(){
+    constructor() {
+        this.Certification = null;
+        this.Education = null;
+        this.Experience = null;
         this.Me = null;
         this.Projects = null;
-        this.Experience = null;
     }
 
     initialize (connectionStringDB){
         return new Promise ( ( resolve, reject ) => {
             const db = mongoose.createConnection( connectionStringDB );
-
-            db.once( 'error', (error) => { reject(error) });
-
-            db.once('open', () => { 
-                this.Me = db.model( "me", Me );
-                this.Projects = db.model( "projects", Projects );
-                this.Experience = db.model( "experience", Experience );
+            
+            db.once( 'error', (error) => { 
+                console.error('Database connection error:', error);
+                reject(error); 
+            });
+            db.once('open', () => {
+                this.Certification = db.model( "Certification", Certification );
+                this.Education = db.model( "Education", Education );
+                this.Experience = db.model( "Experience", Experience );
+                this.Me = db.model( "Me", Me );
+                this.Projects = db.model( "Projects", Projects );
                 resolve();
             });
         });
@@ -40,7 +49,7 @@ module.exports = class ResumeDB{
     }
     getAllProjects ( page, perPage ){
         if(+page && +perPage){
-            return this.Experience.find().sort({_id: +1}).skip((page - 1) * +perPage).limit(+perPage).exec();
+            return this.Projects.find().sort({id: +1}).skip((page - 1) * +perPage).limit(+perPage).exec();
         }
         
         return Promise.reject(new Error('page and perPage query parameters must be valid numbers'));
@@ -52,7 +61,7 @@ module.exports = class ResumeDB{
         return this.Projects.updateOne({_id: id}, { $set: data }).exec();
     }
     deleteProjectById ( id ){
-        return this.Trip.deleteOne({_id: id}).exec();
+        return this.Projects.deleteOne({_id: id}).exec();
     }
 // Experience
     async addNewExperience ( data ){
@@ -74,6 +83,6 @@ module.exports = class ResumeDB{
         return this.Experience.updateOne({_id: id}, { $set: data }).exec();
     }
     deleteExperienceById ( id ){
-        return this.Trip.deleteOne({_id: id}).exec();
+        return this.Experience.deleteOne({_id: id}).exec();
     }
 }

@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const experienceSchema = new Schema ({
-    experience:[
-        {
+const experienceSchema = new Schema (
+  {
             title: {
                 type: String,
                 required: true,
@@ -14,8 +13,8 @@ const experienceSchema = new Schema ({
               },
               range: String,
             responsabilities: [String]
-        }
-    ]
+},{
+  collection: 'Experience'
 });
 
-module.exports = mongoose.model("Experience", experienceSchema);
+module.exports = experienceSchema;
