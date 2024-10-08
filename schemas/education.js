@@ -14,7 +14,20 @@ const EducationSchema = new Schema ({
         type: String,
         required: true
     },
-    award : String
+    country:{
+        name: {
+            type: String,
+            required: true
+        },
+        icon: {
+            type: String,
+            required: true
+        }
+    },
+    awards : {
+        type: String,
+        default: ""
+    }
 },{
     collection: 'Education'
 });
